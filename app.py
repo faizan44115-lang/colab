@@ -40,19 +40,35 @@ if option == "Customer Segmentation":
         value=1000.0
     )
     if st.button("Predict Cluster"):
-        input_data = pd.DataFrame(
-            [[recency, frequency, monetary]],
-            columns=[
-                "Recency",
-                "Frequency",
-                "Monetary"
-            ]
-        )
-        input_scaled = scaler.transform(input_data)
-        cluster = kmeans.predict(input_scaled)[0]
-        st.success(
-            f"Customer belongs to Cluster {cluster}"
-        )
+        try:
+            input_data = pd.DataFrame(
+                [[recency, frequency, monetary]],
+                columns=[
+                    "Recency",
+                    "Frequency",
+                    "Monetary"
+                ]
+            )
+            st.write("### Input Data")
+            st.write(input_data)
+            st.write("### KMeans Expected Features")
+            st.write(kmeans.n_features_in_)
+            input_scaled = scaler.transform(input_data)
+            st.write("### Scaled Input Shape")
+            st.write(input_scaled.shape)
+            cluster = kmeans.predict(input_scaled)[0]
+            st.success(
+                f"Customer belongs to Cluster {cluster}"
+            )
+        except Exception as e:
+            st.error(f"Error: {e}")
+            st.write("Input Columns:")
+            st.write(input_data.columns.tolist())
+            st.write("Input Shape:")
+            st.write(input_data.shape)
+            if hasattr(kmeans, "n_features_in_"):
+                st.write("Model Expected Features:")
+                st.write(kmeans.n_features_in_)
 # =====================================================
 # PRODUCT RECOMMENDATION
 # =====================================================
