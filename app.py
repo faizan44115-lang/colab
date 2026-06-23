@@ -76,14 +76,13 @@ elif option == "Product Recommendation":
     st.header("Product Recommendation System")
     product = st.selectbox(
         "Select Product",
-        similarity_df.columns
+        list(similarity_df.keys())
     )
     if st.button("Recommend Products"):
-        recommendations = (
-            similarity_df[product]
-            .sort_values(ascending=False)
-            .iloc[1:6]
-        )
+        recommendations = similarity_df.get(product, [])
         st.subheader("Recommended Products")
-        for item in recommendations.index:
-            st.write("✅", item)
+        if recommendations:
+            for item in recommendations:
+                st.write("✅", item)
+        else:
+            st.warning("No recommendations found.")
